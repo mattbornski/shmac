@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__version_info__ = (0, 1, 0)
+__version_info__ = (0, 1, 1)
 __version__ = '.'.join([str(i) for i in __version_info__])
 version = __version__
 
@@ -11,7 +11,7 @@ import subprocess
 import sys
 import tempfile
 
-def sudo(command, name=None, icon=None, prompt=None):
+def sudo(command, name=None):
     try:
         # First check to see if we can do this with an existing sudo permission.  Possibly you have already granted it.
         subprocess.check_call(shlex.split('sudo ' + command))
@@ -24,14 +24,6 @@ def sudo(command, name=None, icon=None, prompt=None):
         # which leads us to invoke the script through find instead of directly.
         if name is None:
             name = sys.argv[0] or 'shmac'
-        if icon is None:
-            icon = ''
-        else:
-            icon = '--icon={icon} '.format(icon=os.path.abspath(icon))
-        if prompt is None:
-            prompt = ''
-        else:
-            prompt = '--prompt="{prompt}" '.format(prompt)
         tmpdir = tempfile.mkdtemp()
         try:
             shutil.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sudo_helper'), os.path.join(tmpdir, name))
@@ -42,7 +34,7 @@ def sudo(command, name=None, icon=None, prompt=None):
 sudo {command}
 '''.format(command=command))
             os.chmod(script, 0755)
-            subprocess.check_call(shlex.split('find {tmpdir} -name "{name}" -exec {} "{icon}{prompt}{script}" \;'.format('{}', tmpdir=tmpdir, name=name, icon=icon, prompt=prompt, script=script)))
+            subprocess.check_call(shlex.split('find {tmpdir} -name "{name}" -exec {} "{script}" \;'.format('{}', tmpdir=tmpdir, name=name, script=script)))
         finally:
             shutil.rmtree(tmpdir)
 
