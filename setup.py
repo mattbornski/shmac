@@ -20,7 +20,7 @@ def version(package_name):
         version = 'unknown'
     return version
 
-def github(owner_name, package_name, version=None):
+def github(owner_name, package_name, version):
     # The important things here:
     # 1. The URL should be accessible
     # 2. The URL should point to a page which _is_, or which clearly points _to_, the tarball/zipball/egg
@@ -36,10 +36,14 @@ def setup():
         description='Mac-specific shell helpers',
         author=owner_name,
         url='http://github.com/{owner_name}/{package_name}'.format(owner_name=owner_name, package_name=package_name),
-        package_dir={'': 'src'},
+        package_dir={'':'src'},
         py_modules=[
             package_name,
         ],
+        data_files = [
+            ('', ['sudo_helper']),
+        ],
+        include_package_data=True,
     )
 
 if __name__ == '__main__':

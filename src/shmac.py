@@ -5,6 +5,7 @@ __version__ = '.'.join([str(i) for i in __version_info__])
 version = __version__
 
 import os.path
+import pkg_resources
 import shlex
 import shutil
 import subprocess
@@ -23,10 +24,12 @@ def sudo(command, name=None):
         # subprocess + Mac shell does not like spaces in script names very much, but the find command handles it,
         # which leads us to invoke the script through find instead of directly.
         if name is None:
-            name = sys.argv[0] or 'shmac'
+            name = sys.argv[0] or __name__
         tmpdir = tempfile.mkdtemp()
         try:
-            shutil.copy(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sudo_helper'), os.path.join(tmpdir, name))
+            helper = os.path.join(tmpdir, name)
+            shutil.copy(pkg_resources.resource_filename(__name__, 'sudo_helper'), helper)
+            os.chmod(helper, 0755)
             script = os.path.join(tmpdir, 'script.sh')
             with open(script, 'w') as f:
                 f.write('''#!/bin/bash
