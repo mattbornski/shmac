@@ -43,7 +43,6 @@ def setup():
         data_files = [
             ('', ['sudo_helper']),
         ],
-        include_package_data=True,
     )
 
 if __name__ == '__main__':

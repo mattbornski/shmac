@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-__version_info__ = (0, 1, 1)
+__version_info__ = (0, 1, 2)
 __version__ = '.'.join([str(i) for i in __version_info__])
 version = __version__
 
@@ -15,7 +15,7 @@ import tempfile
 def sudo(command, name=None):
     try:
         # First check to see if we can do this with an existing sudo permission.  Possibly you have already granted it.
-        subprocess.check_call(shlex.split('sudo ' + command))
+        return subprocess.check_call(shlex.split('sudo ' + command))
     except (OSError, subprocess.CalledProcessError):
         # If not, use the Mac sudo dialog to get permission.
         # This is calling out to a third-party binary which is built using ObjectiveC to call the Mac system APIs.
@@ -37,12 +37,12 @@ def sudo(command, name=None):
 sudo {command}
 '''.format(command=command))
             os.chmod(script, 0755)
-            subprocess.check_call(shlex.split('find {tmpdir} -name "{name}" -exec {} "{script}" \;'.format('{}', tmpdir=tmpdir, name=name, script=script)))
+            return subprocess.check_call(shlex.split('find {tmpdir} -name "{name}" -exec {} "{script}" \;'.format('{}', tmpdir=tmpdir, name=name, script=script)))
         finally:
             shutil.rmtree(tmpdir)
 
 def sudo_if_necessary(command, *args, **kwargs):
     try:
-        subprocess.check_call(shlex.split(command))
+        return subprocess.check_call(shlex.split(command))
     except (OSError, subprocess.CalledProcessError):
         return sudo(command, *args, **kwargs)
