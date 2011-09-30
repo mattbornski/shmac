@@ -40,7 +40,10 @@ def setup():
         py_modules=[
             package_name,
         ],
-        data_files = [
+        package_data={
+            '':['sudo_helper'],
+        },
+        data_files=[
             ('', ['sudo_helper']),
         ],
     )
