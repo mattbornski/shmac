@@ -44,7 +44,7 @@ def setup():
             '':['sudo_helper'],
         },
         data_files=[
-            ('', ['sudo_helper']),
+            ('lib/python/site-packages/', ['sudo_helper']),
         ],
     )
 
